@@ -1,5 +1,6 @@
 "use client"
 
+import Link from "next/link"
 import { useState } from "react"
 import { motion, AnimatePresence } from "framer-motion"
 import { Menu, X, User, LogIn } from "lucide-react"
@@ -7,7 +8,7 @@ import { Button } from "@/components/ui/button"
 import AuthModal from "./auth-modal"
 
 const navLinks = [
-  { href: "#", label: "Trang chủ" },
+  { href: "/", label: "Trang chủ" },
   { href: "#activities", label: "Hoạt động" },
   { href: "#cuisine", label: "Ẩm thực" },
   { href: "#about", label: "Về chúng tôi" },
@@ -23,7 +24,7 @@ export default function Header() {
         <div className="container mx-auto px-4 lg:px-8">
           <div className="flex items-center justify-between h-16 lg:h-20">
             {/* Logo */}
-            <motion.a
+            {/*<motion.a
               href="#"
               className="flex items-center gap-2"
               whileHover={{ scale: 1.02 }}
@@ -37,11 +38,27 @@ export default function Header() {
               <span className="text-xl lg:text-2xl font-bold text-foreground">
                 Br<span className="text-primary">OO</span>mK
               </span>
-            </motion.a>
+            </motion.a>*/}
+            <Link href="/">
+              <motion.div
+                className="flex items-center gap-2 cursor-pointer"
+                whileHover={{ scale: 1.02 }}
+                whileTap={{ scale: 0.98 }}
+              >
+                <div className="relative">
+                  <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-primary to-accent flex items-center justify-center">
+                    <span className="text-primary-foreground font-bold text-lg">B</span>
+                  </div>
+                </div>
+                <span className="text-xl lg:text-2xl font-bold text-foreground">
+                  Br<span className="text-primary">OO</span>mK
+                </span>
+              </motion.div>
+            </Link>
 
             {/* Desktop Navigation */}
             <nav className="hidden lg:flex items-center gap-8">
-              {navLinks.map((link) => (
+              {/* {navLinks.map((link) => (
                 <motion.a
                   key={link.label}
                   href={link.href}
@@ -50,6 +67,16 @@ export default function Header() {
                 >
                   {link.label}
                 </motion.a>
+              ))}*/}
+              {navLinks.map((link) => (
+                <Link key={link.label} href={link.href}>
+                  <motion.span
+                    className="text-muted-foreground hover:text-foreground transition-colors font-medium cursor-pointer inline-block"
+                    whileHover={{ y: -2 }}
+                  >
+                    {link.label}
+                  </motion.span>
+                </Link>
               ))}
             </nav>
 

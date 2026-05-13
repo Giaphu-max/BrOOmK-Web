@@ -1,5 +1,6 @@
 "use client"
 
+
 import { useState } from "react"
 import { motion } from "framer-motion"
 import {
@@ -77,11 +78,10 @@ export default function HeroSection() {
                   <motion.button
                     key={tab.id}
                     onClick={() => setActiveTab(tab.id)}
-                    className={`relative flex items-center gap-2 px-4 py-2.5 rounded-xl text-sm font-medium transition-all ${
-                      isActive
-                        ? "text-primary-foreground"
-                        : "text-muted-foreground hover:text-foreground hover:bg-muted/50"
-                    }`}
+                    className={`relative flex items-center gap-2 px-4 py-2.5 rounded-xl text-sm font-medium transition-all ${isActive
+                      ? "text-primary-foreground"
+                      : "text-muted-foreground hover:text-foreground hover:bg-muted/50"
+                      }`}
                     whileHover={{ scale: 1.02 }}
                     whileTap={{ scale: 0.98 }}
                   >
@@ -148,7 +148,18 @@ export default function HeroSection() {
 
             {/* Search Button */}
             <div className="mt-6 flex justify-center">
-              <Link href="/hotels">
+              {/*<Link href="/hotels">*/}
+              <Link
+                href={
+                  {
+                    hotel: "/hotels",
+                    flight: "/flights",
+                    bus: "/bus",
+                    tour: "/tours"
+                  }[activeTab] || "#"
+                }
+              >
+
                 <Button
                   size="lg"
                   className="w-full md:w-auto px-8 h-14 text-base bg-gradient-to-r from-primary to-accent hover:from-primary/90 hover:to-accent/90 shadow-lg shadow-primary/30"
