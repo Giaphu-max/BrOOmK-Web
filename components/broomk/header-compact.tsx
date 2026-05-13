@@ -1,11 +1,11 @@
 "use client"
 
-import { useState } from "react"
+import { useState, useEffect } from "react"
 import { motion, AnimatePresence } from "framer-motion"
-import { Menu, X, User, LogIn } from "lucide-react"
+import { Menu, X, User, LogIn, ChevronDown, Briefcase, Settings, LogOut, CreditCard, Bell } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import Link from "next/link"
-import AuthModal from "./auth-modal"
+import { AuthModal } from "./auth-modal"
 
 const navLinks = [
   { href: "/", label: "Trang chủ" },
@@ -17,6 +17,14 @@ const navLinks = [
 export default function HeaderCompact() {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false)
   const [isAuthModalOpen, setIsAuthModalOpen] = useState(false)
+  const [isLoggedIn, setIsLoggedIn] = useState(false)
+
+  useEffect(() => {
+    const savedState = localStorage.getItem("isLoggedIn")
+    if (savedState === "true") {
+      setIsLoggedIn(true)
+    }
+  }, [])
 
   return (
     <>
@@ -57,23 +65,84 @@ export default function HeaderCompact() {
 
             {/* Desktop Auth Button */}
             <div className="hidden lg:flex items-center gap-3">
-              <Button
-                variant="outline"
-                size="sm"
-                className="glass border-primary/30 hover:bg-primary/10"
-                onClick={() => setIsAuthModalOpen(true)}
-              >
-                <LogIn className="w-4 h-4 mr-2" />
-                Đăng nhập
-              </Button>
-              <Button
-                size="sm"
-                className="bg-gradient-to-r from-primary to-primary/80 hover:from-primary/90 hover:to-primary/70"
-                onClick={() => setIsAuthModalOpen(true)}
-              >
-                <User className="w-4 h-4 mr-2" />
-                Đăng ký
-              </Button>
+              {!isLoggedIn ? (
+                <>
+                  <Button
+                    variant="outline"
+                    size="sm"
+                    className="glass border-primary/30 hover:bg-primary/10"
+                    onClick={() => setIsAuthModalOpen(true)}
+                  >
+                    <LogIn className="w-4 h-4 mr-2" />
+                    Đăng nhập
+                  </Button>
+                  <Button
+                    size="sm"
+                    className="bg-gradient-to-r from-primary to-primary/80 hover:from-primary/90 hover:to-primary/70"
+                    onClick={() => setIsAuthModalOpen(true)}
+                  >
+                    <User className="w-4 h-4 mr-2" />
+                    Đăng ký
+                  </Button>
+                </>
+              ) : (
+                <div className="group relative">
+                  <div className="flex items-center gap-2 cursor-pointer p-1 pr-3 rounded-full hover:bg-slate-100/50 transition-all border border-primary/20 bg-white/50">
+                    <div className="w-7 h-7 rounded-full bg-primary flex items-center justify-center text-white font-bold text-[10px]">
+                      GP
+                    </div>
+                    <div className="text-left">
+                      <p className="text-[9px] text-muted-foreground leading-none">Xin chào,</p>
+                      <p className="text-xs font-bold text-foreground leading-tight">Gia Phú</p>
+                    </div>
+                    <ChevronDown className="w-3 h-3 text-muted-foreground group-hover:rotate-180 transition-transform" />
+                  </div>
+
+                  {/* Dropdown Menu */}
+                  <div className="absolute right-0 mt-2 w-64 bg-white rounded-2xl shadow-xl border border-slate-100 opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all z-50 p-2 overflow-hidden">
+                    <Link href="/profile" className="flex items-center gap-3 p-2.5 text-slate-600 hover:bg-teal-50 hover:text-teal-600 rounded-xl transition-colors">
+                      <User className="w-4 h-4" />
+                      <span className="text-sm font-medium">Hồ sơ cá nhân</span>
+                    </Link>
+
+                    <Link href="/my-trips" className="flex items-center gap-3 p-2.5 text-slate-600 hover:bg-teal-50 hover:text-teal-600 rounded-xl transition-colors">
+                      <Briefcase className="w-4 h-4" />
+                      <span className="text-sm font-medium">Chuyến đi của tôi</span>
+                    </Link>
+
+                    <Link href="/payment" className="flex items-center gap-3 p-2.5 text-slate-600 hover:bg-teal-50 hover:text-teal-600 rounded-xl transition-colors">
+                      <CreditCard className="w-4 h-4" />
+                      <span className="text-sm font-medium">Phương thức thanh toán</span>
+                    </Link>
+
+                    <Link href="/notifications" className="flex items-center justify-between p-2.5 text-slate-600 hover:bg-teal-50 hover:text-teal-600 rounded-xl transition-colors">
+                      <div className="flex items-center gap-3">
+                        <Bell className="w-4 h-4" />
+                        <span className="text-sm font-medium">Thông báo</span>
+                      </div>
+                      <span className="bg-red-500 text-white text-[10px] font-bold px-1.5 py-0.5 rounded-full">3</span>
+                    </Link>
+
+                    <Link href="/settings" className="flex items-center gap-3 p-2.5 text-slate-600 hover:bg-teal-50 hover:text-teal-600 rounded-xl transition-colors">
+                      <Settings className="w-4 h-4" />
+                      <span className="text-sm font-medium">Cài đặt</span>
+                    </Link>
+
+                    <div className="h-px bg-slate-100 my-1" />
+
+                    <button
+                      onClick={() => {
+                        setIsLoggedIn(false);
+                        localStorage.removeItem("isLoggedIn");
+                      }}
+                      className="flex w-full items-center gap-3 p-2.5 text-red-500 hover:bg-red-50 rounded-xl transition-colors"
+                    >
+                      <LogOut className="w-4 h-4" />
+                      <span className="text-sm font-medium">Đăng xuất</span>
+                    </button>
+                  </div>
+                </div>
+              )}
             </div>
 
             {/* Mobile Menu Button */}
@@ -140,7 +209,15 @@ export default function HeaderCompact() {
         </AnimatePresence>
       </header>
 
-      <AuthModal isOpen={isAuthModalOpen} onClose={() => setIsAuthModalOpen(false)} />
+      <AuthModal
+        isOpen={isAuthModalOpen}
+        onClose={() => setIsAuthModalOpen(false)}
+        onLoginSuccess={() => {
+          setIsLoggedIn(true);
+          localStorage.setItem("isLoggedIn", "true");
+          setIsAuthModalOpen(false);
+        }}
+      />
     </>
   )
 }
