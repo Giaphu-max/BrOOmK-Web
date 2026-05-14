@@ -1,9 +1,10 @@
 "use client"
 
 import Link from "next/link"
+import { useRouter } from "next/navigation"
 import { useState, useEffect } from "react"
 import { motion, AnimatePresence } from "framer-motion"
-import { Menu, X, User, LogIn, ChevronDown, Briefcase, Settings, LogOut, CreditCard, Bell } from "lucide-react"
+import { Menu, X, User, LogIn, ChevronDown, Briefcase, Settings, LogOut, CreditCard, Bell, Gift } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { AuthModal } from "./auth-modal"
 
@@ -15,6 +16,7 @@ const navLinks = [
 ]
 
 export default function Header() {
+  const router = useRouter()
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false)
   const [isAuthModalOpen, setIsAuthModalOpen] = useState(false)
   const [isLoggedIn, setIsLoggedIn] = useState(false)
@@ -25,6 +27,45 @@ export default function Header() {
       setIsLoggedIn(true)
     }
   }, [])
+
+  // Tìm đến hàm handleNavClick trong file Header.tsx và chép đè đoạn này:
+  const handleNavClick = (e: React.MouseEvent<HTMLAnchorElement>, href: string) => {
+    const isHashLink = href.startsWith('#')
+    const isHomeHashLink = href.startsWith('/#')
+    const isHomePage = href === '/'
+
+    // TRƯỜNG HỢP 1: Bấm vào nút "Trang chủ" khi đang ở ngay trang chủ
+    if (isHomePage && window.location.pathname === '/') {
+      e.preventDefault()
+      window.scrollTo({
+        top: 0,
+        behavior: "smooth"
+      })
+      setIsMobileMenuOpen(false)
+      return
+    }
+
+    // TRƯỜNG HỢP 2: Các link neo (#activities, #about...)
+    if (isHashLink || (isHomeHashLink && window.location.pathname === '/')) {
+      e.preventDefault()
+
+      const targetId = isHashLink ? href.substring(1) : href.replace('/#', '')
+      const element = document.getElementById(targetId)
+
+      if (element) {
+        const headerOffset = 80
+        const elementPosition = element.getBoundingClientRect().top
+        const offsetPosition = elementPosition + window.scrollY - headerOffset
+
+        window.scrollTo({
+          top: offsetPosition,
+          behavior: "smooth"
+        })
+
+        setIsMobileMenuOpen(false)
+      }
+    }
+  }
 
   return (
     <>
@@ -52,7 +93,11 @@ export default function Header() {
             {/* Desktop Navigation */}
             <nav className="hidden lg:flex items-center gap-8">
               {navLinks.map((link) => (
-                <Link key={link.label} href={link.href}>
+                <Link
+                  key={link.label}
+                  href={link.href}
+                  onClick={(e) => handleNavClick(e, link.href)} // ĐÃ THÊM HÀM CLICK
+                >
                   <motion.span
                     className="text-muted-foreground hover:text-foreground transition-colors font-medium cursor-pointer inline-block"
                     whileHover={{ y: -2 }}
@@ -96,7 +141,7 @@ export default function Header() {
                     <ChevronDown className="w-4 h-4 text-muted-foreground group-hover:rotate-180 transition-transform" />
                   </div>
 
-                  {/* Dropdown Menu với đầy đủ 5 tính năng */}
+                  {/* Dropdown Menu */}
                   <div className="absolute right-0 mt-2 w-64 bg-white rounded-2xl shadow-xl border border-slate-100 opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all z-50 p-2 overflow-hidden">
                     <Link href="/profile" className="flex items-center gap-3 p-2.5 text-slate-600 hover:bg-teal-50 hover:text-teal-600 rounded-xl transition-colors">
                       <User className="w-4 h-4" />
@@ -111,6 +156,11 @@ export default function Header() {
                     <Link href="/payment" className="flex items-center gap-3 p-2.5 text-slate-600 hover:bg-teal-50 hover:text-teal-600 rounded-xl transition-colors">
                       <CreditCard className="w-4 h-4" />
                       <span className="text-sm font-medium">Phương thức thanh toán</span>
+                    </Link>
+
+                    <Link href="/rewards" className="flex items-center gap-3 p-2.5 text-slate-600 hover:bg-teal-50 hover:text-teal-600 rounded-xl transition-colors">
+                      <Gift className="w-4 h-4" />
+                      <span className="text-sm font-medium">Ưu đãi & Điểm thưởng</span>
                     </Link>
 
                     <Link href="/notifications" className="flex items-center justify-between p-2.5 text-slate-600 hover:bg-teal-50 hover:text-teal-600 rounded-xl transition-colors">
@@ -132,6 +182,7 @@ export default function Header() {
                       onClick={() => {
                         setIsLoggedIn(false);
                         localStorage.removeItem("isLoggedIn");
+                        router.push("/");
                       }}
                       className="flex w-full items-center gap-3 p-2.5 text-red-500 hover:bg-red-50 rounded-xl transition-colors"
                     >
@@ -164,13 +215,16 @@ export default function Header() {
             >
               <nav className="container mx-auto px-4 py-4 flex flex-col gap-4">
                 {navLinks.map((link, index) => (
-                  <Link key={link.label} href={link.href}>
+                  <Link
+                    key={link.label}
+                    href={link.href}
+                    onClick={(e) => handleNavClick(e, link.href)} // ĐÃ THÊM HÀM CLICK
+                  >
                     <motion.span
                       className="block text-foreground font-medium py-2"
                       initial={{ opacity: 0, x: -20 }}
                       animate={{ opacity: 1, x: 0 }}
                       transition={{ delay: index * 0.1 }}
-                      onClick={() => setIsMobileMenuOpen(false)}
                     >
                       {link.label}
                     </motion.span>

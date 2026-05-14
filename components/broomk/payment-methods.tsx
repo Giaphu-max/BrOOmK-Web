@@ -2,6 +2,7 @@
 
 import { useState } from "react"
 import Link from "next/link"
+import { useRouter } from "next/navigation" // ĐÃ THÊM: Import useRouter
 import { motion } from "framer-motion"
 import {
     User,
@@ -14,12 +15,15 @@ import {
     Hotel,
     CheckCircle,
     Trash2,
+    Gift // ĐÃ THÊM: Icon Gift
 } from "lucide-react"
 
+// ĐÃ SỬA: Đồng bộ mảng menuItems thêm mục Ưu đãi & Điểm thưởng
 const menuItems = [
     { icon: User, label: "Hồ sơ cá nhân", href: "/profile", active: false },
-    { icon: Plane, label: "Chuyến đi của tôi", href: "/my-trips", active: false }, // ĐÃ SỬA THÀNH /my-trips
+    { icon: Plane, label: "Chuyến đi của tôi", href: "/my-trips", active: false },
     { icon: CreditCard, label: "Phương thức thanh toán", href: "/payment", active: true },
+    { icon: Gift, label: "Ưu đãi & Điểm thưởng", href: "/rewards", active: false }, // DÒNG MỚI THÊM
     { icon: Bell, label: "Thông báo", href: "/notifications", active: false, badge: 3 },
     { icon: Settings, label: "Cài đặt", href: "/settings", active: false },
 ]
@@ -99,6 +103,7 @@ function formatCurrency(amount: number) {
 }
 
 export default function PaymentMethods() {
+    const router = useRouter() // ĐÃ THÊM: Khởi tạo router
     const [cards] = useState([
         {
             id: 1,
@@ -121,7 +126,7 @@ export default function PaymentMethods() {
                 >
                     {/* Sidebar Navigation */}
                     <motion.aside variants={itemVariants} className="lg:w-1/4 w-full">
-                        <div className="bg-white rounded-3xl p-6 shadow-sm">
+                        <div className="bg-white rounded-3xl p-6 shadow-sm border border-slate-100">
                             <div className="flex items-center gap-4 pb-6 border-b border-slate-100">
                                 <div className="relative">
                                     <div className="w-16 h-16 rounded-full bg-gradient-to-br from-teal-400 to-teal-600 flex items-center justify-center text-white text-2xl font-bold">
@@ -141,8 +146,8 @@ export default function PaymentMethods() {
                                         key={item.label}
                                         href={item.href}
                                         className={`w-full flex items-center gap-3 px-4 py-3 rounded-2xl transition-all duration-200 ${item.active
-                                                ? "bg-teal-50 text-teal-600 font-medium"
-                                                : "text-slate-600 hover:bg-slate-50"
+                                            ? "bg-teal-50 text-teal-600 font-medium"
+                                            : "text-slate-600 hover:bg-slate-50"
                                             }`}
                                     >
                                         <item.icon className="w-5 h-5" />
@@ -156,11 +161,11 @@ export default function PaymentMethods() {
                                 ))}
 
                                 <div className="pt-4 border-t border-slate-100 mt-4">
-                                    {/* ĐÃ SỬA: Nút đăng xuất xóa state và đá về trang chủ */}
+                                    {/* ĐÃ SỬA: Dùng useRouter thay vì window.location */}
                                     <button
                                         onClick={() => {
                                             localStorage.removeItem("isLoggedIn");
-                                            window.location.href = "/";
+                                            router.push("/");
                                         }}
                                         className="w-full flex items-center gap-3 px-4 py-3 rounded-2xl text-red-500 hover:bg-red-50 transition-all duration-200"
                                     >
@@ -187,7 +192,7 @@ export default function PaymentMethods() {
                         {/* My Cards Section */}
                         <motion.div
                             variants={itemVariants}
-                            className="bg-white rounded-3xl p-6 shadow-sm"
+                            className="bg-white rounded-3xl p-6 shadow-sm border border-slate-100"
                         >
                             <h2 className="text-lg font-semibold text-slate-900 mb-6">
                                 Thẻ của tôi
@@ -288,7 +293,7 @@ export default function PaymentMethods() {
                         {/* Recent Transactions */}
                         <motion.div
                             variants={itemVariants}
-                            className="bg-white rounded-3xl p-6 shadow-sm"
+                            className="bg-white rounded-3xl p-6 shadow-sm border border-slate-100"
                         >
                             <div className="flex items-center justify-between mb-6">
                                 <h2 className="text-lg font-semibold text-slate-900">
@@ -306,13 +311,13 @@ export default function PaymentMethods() {
                                         initial={{ opacity: 0, x: -20 }}
                                         animate={{ opacity: 1, x: 0 }}
                                         transition={{ delay: index * 0.1, duration: 0.4 }}
-                                        className="flex items-center gap-4 p-4 rounded-2xl hover:bg-slate-50 transition-colors duration-200"
+                                        className="flex items-center gap-4 p-4 rounded-2xl hover:bg-slate-50 border border-transparent hover:border-slate-100 transition-colors duration-200"
                                     >
                                         {/* Icon */}
                                         <div
                                             className={`w-12 h-12 rounded-2xl flex items-center justify-center ${transaction.type === "flight"
-                                                    ? "bg-blue-100 text-blue-600"
-                                                    : "bg-amber-100 text-amber-600"
+                                                ? "bg-blue-100 text-blue-600"
+                                                : "bg-amber-100 text-amber-600"
                                                 }`}
                                         >
                                             {transaction.type === "flight" ? (
@@ -335,7 +340,7 @@ export default function PaymentMethods() {
                                             <p className="font-semibold text-slate-900">
                                                 -{formatCurrency(transaction.amount)}
                                             </p>
-                                            <span className="inline-flex items-center gap-1 px-2 py-0.5 bg-green-100 text-green-700 text-xs font-medium rounded-full">
+                                            <span className="inline-flex items-center gap-1 px-2 py-0.5 bg-green-100 text-green-700 text-xs font-medium rounded-full mt-1">
                                                 <CheckCircle className="w-3 h-3" />
                                                 Thành công
                                             </span>

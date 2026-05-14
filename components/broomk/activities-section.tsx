@@ -1,5 +1,6 @@
 "use client"
 
+import Link from "next/link" // ĐÃ THÊM: Import Link từ Next.js
 import { motion } from "framer-motion"
 import { ArrowRight, Star } from "lucide-react"
 
@@ -107,59 +108,60 @@ export default function ActivitiesSection() {
           viewport={{ once: true, margin: "-100px" }}
           className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 lg:gap-6"
         >
-          {activities.map((activity, index) => (
+          {activities.map((activity) => (
             <motion.div
               key={activity.id}
               variants={itemVariants}
-              className={`group relative overflow-hidden rounded-2xl lg:rounded-3xl cursor-pointer ${
-                activity.size === "large"
-                  ? "md:col-span-2 md:row-span-2 aspect-square md:aspect-auto min-h-[300px] lg:min-h-[500px]"
-                  : activity.size === "medium"
+              className={`${activity.size === "large"
+                ? "md:col-span-2 md:row-span-2 aspect-square md:aspect-auto min-h-[300px] lg:min-h-[500px]"
+                : activity.size === "medium"
                   ? "aspect-[4/3] min-h-[200px] lg:min-h-[240px]"
                   : "aspect-square min-h-[200px]"
-              }`}
-              whileHover={{ scale: 1.02 }}
-              transition={{ duration: 0.3 }}
+                }`}
             >
-              {/* Image */}
-              <div
-                className="absolute inset-0 bg-cover bg-center transition-transform duration-500 group-hover:scale-110"
-                style={{ backgroundImage: `url('${activity.image}')` }}
-              />
-
-              {/* Overlay */}
-              <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent" />
-
-              {/* Glass Border on Hover */}
-              <div className="absolute inset-0 rounded-2xl lg:rounded-3xl border-2 border-transparent group-hover:border-white/30 transition-colors duration-300" />
-
-              {/* Content */}
-              <div className="absolute inset-0 p-4 lg:p-6 flex flex-col justify-end">
-                <div className="flex items-center gap-2 mb-2">
-                  <span className="px-2 py-1 bg-white/20 backdrop-blur-sm rounded-full text-xs text-white font-medium">
-                    {activity.category}
-                  </span>
-                  <div className="flex items-center gap-1 px-2 py-1 bg-accent/90 rounded-full">
-                    <Star className="w-3 h-3 fill-current text-accent-foreground" />
-                    <span className="text-xs font-medium text-accent-foreground">{activity.rating}</span>
-                  </div>
-                </div>
-                <h3 className={`font-bold text-white mb-2 ${
-                  activity.size === "large" ? "text-2xl lg:text-3xl" : "text-lg lg:text-xl"
-                }`}>
-                  {activity.title}
-                </h3>
-
-                {/* Arrow Link */}
+              {/* ĐÃ SỬA: Bọc Link của Next.js bao quanh toàn bộ thẻ */}
+              <Link href={`/activities/${activity.id}`} className="block w-full h-full outline-none">
                 <motion.div
-                  initial={{ opacity: 0, x: -10 }}
-                  whileHover={{ opacity: 1, x: 0 }}
-                  className="flex items-center gap-2 text-white/80 group-hover:text-white transition-colors"
+                  className="group relative overflow-hidden rounded-2xl lg:rounded-3xl cursor-pointer w-full h-full"
+                  whileHover={{ scale: 1.02 }}
+                  transition={{ duration: 0.3 }}
                 >
-                  <span className="text-sm font-medium">Khám phá ngay</span>
-                  <ArrowRight className="w-4 h-4 transform group-hover:translate-x-1 transition-transform" />
+                  {/* Image */}
+                  <div
+                    className="absolute inset-0 bg-cover bg-center transition-transform duration-500 group-hover:scale-110"
+                    style={{ backgroundImage: `url('${activity.image}')` }}
+                  />
+
+                  {/* Overlay */}
+                  <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent" />
+
+                  {/* Glass Border on Hover */}
+                  <div className="absolute inset-0 rounded-2xl lg:rounded-3xl border-2 border-transparent group-hover:border-white/30 transition-colors duration-300" />
+
+                  {/* Content */}
+                  <div className="absolute inset-0 p-4 lg:p-6 flex flex-col justify-end">
+                    <div className="flex items-center gap-2 mb-2">
+                      <span className="px-2 py-1 bg-white/20 backdrop-blur-sm rounded-full text-xs text-white font-medium">
+                        {activity.category}
+                      </span>
+                      <div className="flex items-center gap-1 px-2 py-1 bg-accent/90 rounded-full">
+                        <Star className="w-3 h-3 fill-current text-accent-foreground" />
+                        <span className="text-xs font-medium text-accent-foreground">{activity.rating}</span>
+                      </div>
+                    </div>
+                    <h3 className={`font-bold text-white mb-2 ${activity.size === "large" ? "text-2xl lg:text-3xl" : "text-lg lg:text-xl"
+                      }`}>
+                      {activity.title}
+                    </h3>
+
+                    {/* Arrow Link */}
+                    <div className="flex items-center gap-2 text-white/80 group-hover:text-white transition-colors">
+                      <span className="text-sm font-medium">Khám phá ngay</span>
+                      <ArrowRight className="w-4 h-4 transform group-hover:translate-x-1 transition-transform" />
+                    </div>
+                  </div>
                 </motion.div>
-              </div>
+              </Link>
             </motion.div>
           ))}
         </motion.div>
@@ -172,15 +174,17 @@ export default function ActivitiesSection() {
           transition={{ duration: 0.6, delay: 0.4 }}
           className="text-center mt-10 lg:mt-14"
         >
-          <motion.a
-            href="#"
-            className="inline-flex items-center gap-2 px-6 py-3 bg-primary text-primary-foreground rounded-xl font-medium hover:bg-primary/90 transition-colors"
-            whileHover={{ scale: 1.02 }}
-            whileTap={{ scale: 0.98 }}
-          >
-            Xem tất cả điểm đến
-            <ArrowRight className="w-5 h-5" />
-          </motion.a>
+          {/* ĐÃ SỬA LỖI DEPRECATED: Bỏ passHref legacyBehavior, dùng motion.div bên trong Link */}
+          <Link href="/activities" className="inline-block">
+            <motion.div
+              className="inline-flex items-center gap-2 px-6 py-3 bg-primary text-primary-foreground rounded-xl font-medium hover:bg-primary/90 transition-colors cursor-pointer"
+              whileHover={{ scale: 1.02 }}
+              whileTap={{ scale: 0.98 }}
+            >
+              Xem tất cả điểm đến
+              <ArrowRight className="w-5 h-5" />
+            </motion.div>
+          </Link>
         </motion.div>
       </div>
     </section>

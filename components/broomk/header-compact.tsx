@@ -1,8 +1,9 @@
 "use client"
 
 import { useState, useEffect } from "react"
+import { useRouter } from "next/navigation" // ĐÃ THÊM: Import useRouter
 import { motion, AnimatePresence } from "framer-motion"
-import { Menu, X, User, LogIn, ChevronDown, Briefcase, Settings, LogOut, CreditCard, Bell } from "lucide-react"
+import { Menu, X, User, LogIn, ChevronDown, Briefcase, Settings, LogOut, CreditCard, Bell, Gift } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import Link from "next/link"
 import { AuthModal } from "./auth-modal"
@@ -15,6 +16,7 @@ const navLinks = [
 ]
 
 export default function HeaderCompact() {
+  const router = useRouter() // ĐÃ THÊM: Khởi tạo router
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false)
   const [isAuthModalOpen, setIsAuthModalOpen] = useState(false)
   const [isLoggedIn, setIsLoggedIn] = useState(false)
@@ -98,7 +100,7 @@ export default function HeaderCompact() {
                     <ChevronDown className="w-3 h-3 text-muted-foreground group-hover:rotate-180 transition-transform" />
                   </div>
 
-                  {/* Dropdown Menu */}
+                  {/* Dropdown Menu (Đã thêm mục Ưu đãi & Điểm thưởng) */}
                   <div className="absolute right-0 mt-2 w-64 bg-white rounded-2xl shadow-xl border border-slate-100 opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all z-50 p-2 overflow-hidden">
                     <Link href="/profile" className="flex items-center gap-3 p-2.5 text-slate-600 hover:bg-teal-50 hover:text-teal-600 rounded-xl transition-colors">
                       <User className="w-4 h-4" />
@@ -113,6 +115,11 @@ export default function HeaderCompact() {
                     <Link href="/payment" className="flex items-center gap-3 p-2.5 text-slate-600 hover:bg-teal-50 hover:text-teal-600 rounded-xl transition-colors">
                       <CreditCard className="w-4 h-4" />
                       <span className="text-sm font-medium">Phương thức thanh toán</span>
+                    </Link>
+
+                    <Link href="/rewards" className="flex items-center gap-3 p-2.5 text-slate-600 hover:bg-teal-50 hover:text-teal-600 rounded-xl transition-colors">
+                      <Gift className="w-4 h-4" />
+                      <span className="text-sm font-medium">Ưu đãi & Điểm thưởng</span>
                     </Link>
 
                     <Link href="/notifications" className="flex items-center justify-between p-2.5 text-slate-600 hover:bg-teal-50 hover:text-teal-600 rounded-xl transition-colors">
@@ -134,6 +141,7 @@ export default function HeaderCompact() {
                       onClick={() => {
                         setIsLoggedIn(false);
                         localStorage.removeItem("isLoggedIn");
+                        router.push("/"); // ĐÃ SỬA: Chuyển trang bằng Next Router
                       }}
                       className="flex w-full items-center gap-3 p-2.5 text-red-500 hover:bg-red-50 rounded-xl transition-colors"
                     >

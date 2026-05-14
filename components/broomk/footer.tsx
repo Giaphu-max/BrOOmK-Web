@@ -1,13 +1,13 @@
 "use client"
 
 import { motion } from "framer-motion"
-import { 
-  Facebook, 
-  Instagram, 
-  Twitter, 
-  Youtube, 
-  Mail, 
-  Phone, 
+import {
+  Facebook,
+  Instagram,
+  Twitter,
+  Youtube,
+  Mail,
+  Phone,
   MapPin,
   Send
 } from "lucide-react"
@@ -44,7 +44,8 @@ const socialLinks = [
 
 export default function Footer() {
   return (
-    <footer className="bg-foreground text-background">
+    // ĐÃ THÊM: id="about" để link từ thanh Header có thể nhảy xuống đây
+    <footer id="about" className="bg-foreground text-background">
       {/* Main Footer */}
       <div className="container mx-auto px-4 lg:px-8 py-12 lg:py-16">
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-10 lg:gap-12">
@@ -63,7 +64,7 @@ export default function Footer() {
               </span>
             </motion.a>
             <p className="text-background/70 mb-6 max-w-sm text-pretty">
-              Nền tảng du lịch trực tuyến hàng đầu Việt Nam. Khám phá, đặt chỗ và trải nghiệm những 
+              Nền tảng du lịch trực tuyến hàng đầu Việt Nam. Khám phá, đặt chỗ và trải nghiệm những
               điều tuyệt vời nhất.
             </p>
 
@@ -158,6 +159,7 @@ export default function Footer() {
             </form>
           </div>
         </div>
+
       </div>
 
       {/* Bottom Bar */}

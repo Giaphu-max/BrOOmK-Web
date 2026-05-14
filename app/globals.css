@@ -1,6 +1,10 @@
 @import 'tailwindcss';
 @import 'tw-animate-css';
 
+html {
+  scroll-behavior: smooth;
+}
+
 @custom-variant dark (&:is(.dark *));
 
 :root {
@@ -30,7 +34,7 @@
   --chart-4: oklch(0.75 0.1 150);
   --chart-5: oklch(0.6 0.18 30);
   --radius: 1rem;
-  
+
   /* Custom travel theme tokens */
   --glass: oklch(1 0 0 / 0.15);
   --glass-border: oklch(1 0 0 / 0.3);
@@ -109,6 +113,7 @@
   * {
     @apply border-border outline-ring/50;
   }
+
   body {
     @apply bg-background text-foreground;
   }
@@ -149,7 +154,9 @@
     transform: scale(1);
     opacity: 1;
   }
-  75%, 100% {
+
+  75%,
+  100% {
     transform: scale(2);
     opacity: 0;
   }

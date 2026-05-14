@@ -2,6 +2,7 @@
 
 import { useState } from "react"
 import Link from "next/link"
+import { useRouter } from "next/navigation" // ĐÃ THÊM: Import useRouter
 import { motion } from "framer-motion"
 import {
     User,
@@ -19,13 +20,16 @@ import {
     Banknote,
     Palette,
     Trash2,
+    Gift // ĐÃ THÊM: Icon Gift
 } from "lucide-react"
 
+// ĐÃ SỬA: Cập nhật mảng menuItems đầy đủ
 const menuItems = [
-    { label: "Hồ sơ cá nhân", href: "/profile", icon: User },
-    { label: "Chuyến đi của tôi", href: "/my-trips", icon: Plane },
-    { label: "Phương thức thanh toán", href: "/payment", icon: CreditCard },
-    { label: "Thông báo", href: "/notifications", icon: Bell },
+    { label: "Hồ sơ cá nhân", href: "/profile", icon: User, active: false },
+    { label: "Chuyến đi của tôi", href: "/my-trips", icon: Plane, active: false },
+    { label: "Phương thức thanh toán", href: "/payment", icon: CreditCard, active: false },
+    { label: "Ưu đãi & Điểm thưởng", href: "/rewards", icon: Gift, active: false }, // DÒNG MỚI THÊM
+    { label: "Thông báo", href: "/notifications", icon: Bell, active: false, badge: 3 },
     { label: "Cài đặt", href: "/settings", icon: Settings, active: true },
 ]
 
@@ -52,6 +56,7 @@ const itemVariants = {
 }
 
 export default function SettingsContent() {
+    const router = useRouter() // ĐÃ THÊM: Khởi tạo router
     const [language, setLanguage] = useState("vi")
     const [currency, setCurrency] = useState("VND")
     const [theme, setTheme] = useState("light")
@@ -92,8 +97,11 @@ export default function SettingsContent() {
                         <div className="bg-white rounded-3xl shadow-sm border border-slate-100 p-6 sticky top-8">
                             {/* User Info */}
                             <div className="flex items-center gap-4 pb-6 border-b border-slate-100">
-                                <div className="w-14 h-14 rounded-full bg-gradient-to-br from-teal-500 to-teal-600 flex items-center justify-center text-white font-bold text-xl shadow-lg shadow-teal-500/30">
-                                    GP
+                                <div className="relative">
+                                    <div className="w-16 h-16 rounded-full bg-gradient-to-br from-teal-400 to-teal-600 flex items-center justify-center text-white text-2xl font-bold">
+                                        GP
+                                    </div>
+                                    <div className="absolute -bottom-1 -right-1 w-5 h-5 bg-green-500 rounded-full border-2 border-white" />
                                 </div>
                                 <div>
                                     <h3 className="font-semibold text-slate-800">Gia Phú</h3>
@@ -109,13 +117,20 @@ export default function SettingsContent() {
                                         <Link
                                             key={item.href}
                                             href={item.href}
-                                            className={`flex items-center gap-3 px-4 py-3 rounded-2xl font-medium transition-all ${item.active
-                                                    ? "bg-teal-50 text-teal-600"
-                                                    : "text-slate-600 hover:bg-slate-50 hover:text-slate-800"
+                                            className={`w-full flex items-center justify-between px-4 py-3 rounded-2xl font-medium transition-all duration-200 ${item.active
+                                                ? "bg-teal-50 text-teal-600"
+                                                : "text-slate-600 hover:bg-slate-50 hover:text-slate-800"
                                                 }`}
                                         >
-                                            <Icon className="w-5 h-5" />
-                                            <span>{item.label}</span>
+                                            <div className="flex items-center gap-3">
+                                                <Icon className="w-5 h-5" />
+                                                <span>{item.label}</span>
+                                            </div>
+                                            {item.badge && (
+                                                <span className="w-5 h-5 bg-red-500 text-white text-xs rounded-full flex items-center justify-center">
+                                                    {item.badge}
+                                                </span>
+                                            )}
                                         </Link>
                                     )
                                 })}
@@ -123,12 +138,13 @@ export default function SettingsContent() {
 
                             {/* Logout Button */}
                             <div className="mt-6 pt-6 border-t border-slate-100">
+                                {/* ĐÃ SỬA: Đổi window.location thành router.push */}
                                 <button
                                     onClick={() => {
                                         localStorage.removeItem("isLoggedIn")
-                                        window.location.href = "/"
+                                        router.push("/")
                                     }}
-                                    className="flex items-center gap-3 px-4 py-3 rounded-2xl font-medium text-red-500 hover:bg-red-50 transition-all w-full"
+                                    className="flex w-full items-center gap-3 px-4 py-3 rounded-2xl font-medium text-red-500 hover:bg-red-50 transition-all"
                                 >
                                     <LogOut className="w-5 h-5" />
                                     <span>Đăng xuất</span>
@@ -287,8 +303,8 @@ export default function SettingsContent() {
                                                 whileTap={{ scale: 0.98 }}
                                                 onClick={() => setTheme(t.id)}
                                                 className={`relative flex flex-col items-center gap-3 p-6 rounded-2xl border-2 transition-all ${isActive
-                                                        ? "border-teal-500 bg-teal-50"
-                                                        : "border-slate-200 bg-slate-50 hover:border-slate-300"
+                                                    ? "border-teal-500 bg-teal-50"
+                                                    : "border-slate-200 bg-slate-50 hover:border-slate-300"
                                                     }`}
                                             >
                                                 <div
@@ -391,7 +407,7 @@ export default function SettingsContent() {
                             <button
                                 onClick={() => {
                                     localStorage.removeItem("isLoggedIn")
-                                    window.location.href = "/"
+                                    router.push("/") // ĐÃ SỬA: Chuyển trang mượt mà
                                 }}
                                 className="flex-1 px-4 py-3 bg-red-500 hover:bg-red-600 text-white font-medium rounded-xl transition-colors"
                             >

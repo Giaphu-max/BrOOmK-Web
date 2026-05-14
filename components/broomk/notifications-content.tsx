@@ -77,11 +77,12 @@ const initialNotifications: Notification[] = [
     },
 ]
 
-// ĐÃ SỬA: Đồng bộ link href
+// ĐÃ SỬA: Đồng bộ link href và thêm mục Ưu đãi
 const menuItems = [
     { icon: User, label: "Hồ sơ cá nhân", href: "/profile", active: false },
     { icon: Plane, label: "Chuyến đi của tôi", href: "/my-trips", active: false },
     { icon: CreditCard, label: "Phương thức thanh toán", href: "/payment", active: false },
+    { icon: Gift, label: "Ưu đãi & Điểm thưởng", href: "/rewards", active: false }, // ĐÃ THÊM MỤC NÀY
     { icon: Bell, label: "Thông báo", href: "/notifications", badge: 3, active: true },
     { icon: Settings, label: "Cài đặt", href: "/settings", active: false },
 ]
@@ -151,49 +152,47 @@ export default function NotificationsContent() {
                         transition={{ duration: 0.5 }}
                         className="w-full lg:w-1/4"
                     >
-                        <div className="bg-white rounded-3xl shadow-sm border border-slate-100 overflow-hidden">
+                        <div className="bg-white rounded-3xl shadow-sm border border-slate-100 overflow-hidden p-6">
                             {/* User Info */}
-                            <div className="p-6 border-b border-slate-100">
-                                <div className="flex items-center gap-4">
-                                    <div className="w-14 h-14 rounded-full bg-gradient-to-br from-teal-400 to-teal-600 flex items-center justify-center text-white text-xl font-bold">
+                            <div className="flex items-center gap-4 pb-6 border-b border-slate-100">
+                                <div className="relative">
+                                    <div className="w-16 h-16 rounded-full bg-gradient-to-br from-teal-400 to-teal-600 flex items-center justify-center text-white text-2xl font-bold">
                                         GP
                                     </div>
-                                    <div>
-                                        <h3 className="font-semibold text-slate-800">Gia Phú</h3>
-                                        <p className="text-sm text-slate-500">Hạng Vàng</p>
-                                    </div>
+                                    <div className="absolute -bottom-1 -right-1 w-5 h-5 bg-green-500 rounded-full border-2 border-white" />
+                                </div>
+                                <div>
+                                    <h3 className="font-semibold text-slate-800">Gia Phú</h3>
+                                    <p className="text-sm text-slate-500">Hạng Vàng</p>
                                 </div>
                             </div>
 
                             {/* Menu */}
-                            <nav className="p-4">
-                                <ul className="space-y-1">
-                                    {/* ĐÃ SỬA: Đảm bảo dùng thẻ Link */}
-                                    {menuItems.map((item) => (
-                                        <li key={item.label}>
-                                            <Link
-                                                href={item.href}
-                                                className={`flex items-center justify-between px-4 py-3 rounded-2xl transition-all ${item.active
-                                                        ? "bg-teal-50 text-teal-600"
-                                                        : "text-slate-600 hover:bg-slate-50 hover:text-slate-800"
+                            <nav className="mt-6 space-y-2">
+                                {/* ĐÃ SỬA: Đảm bảo dùng thẻ Link thay vì thẻ a hoặc list item rườm rà */}
+                                {menuItems.map((item) => (
+                                    <Link
+                                        key={item.label}
+                                        href={item.href}
+                                        className={`w-full flex items-center justify-between px-4 py-3 rounded-2xl transition-all duration-200 ${item.active
+                                            ? "bg-teal-50 text-teal-600 font-medium"
+                                            : "text-slate-600 hover:bg-slate-50"
+                                            }`}
+                                    >
+                                        <div className="flex items-center gap-3">
+                                            <item.icon className="w-5 h-5" />
+                                            <span className="flex-1 text-left">{item.label}</span>
+                                        </div>
+                                        {item.badge && (
+                                            <span
+                                                className={`w-5 h-5 flex items-center justify-center text-xs font-semibold rounded-full ${item.active ? "bg-red-500 text-white" : "bg-red-500 text-white"
                                                     }`}
                                             >
-                                                <div className="flex items-center gap-3">
-                                                    <item.icon className="w-5 h-5" />
-                                                    <span className="font-medium">{item.label}</span>
-                                                </div>
-                                                {item.badge && (
-                                                    <span
-                                                        className={`px-2.5 py-0.5 text-xs font-semibold rounded-full ${item.active ? "bg-teal-600 text-white" : "bg-slate-200 text-slate-600"
-                                                            }`}
-                                                    >
-                                                        {item.badge}
-                                                    </span>
-                                                )}
-                                            </Link>
-                                        </li>
-                                    ))}
-                                </ul>
+                                                {item.badge}
+                                            </span>
+                                        )}
+                                    </Link>
+                                ))}
 
                                 {/* Logout Button */}
                                 <div className="mt-4 pt-4 border-t border-slate-100">
@@ -203,7 +202,7 @@ export default function NotificationsContent() {
                                             localStorage.removeItem("isLoggedIn");
                                             window.location.href = "/";
                                         }}
-                                        className="flex items-center gap-3 px-4 py-3 w-full text-red-500 hover:bg-red-50 rounded-2xl transition-colors"
+                                        className="w-full flex items-center gap-3 px-4 py-3 rounded-2xl text-red-500 hover:bg-red-50 transition-all duration-200"
                                     >
                                         <LogOut className="w-5 h-5" />
                                         <span className="font-medium">Đăng xuất</span>
